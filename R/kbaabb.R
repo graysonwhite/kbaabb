@@ -25,9 +25,10 @@
 #' @param seed A seed to be set for reproducibility. 
 #' @param ... Currently ignored. For extendability.
 #'
-#' @return A `kbaabb` object including the population data (`obj$pop`), original
-#' sample data (`obj$samp`), k (`obj$k`), stratifying indicator and variable
-#' (`obj$stratified`, `obj$strata`), if centering and scaling occured
+#' @return A `kbaabb` object including the population data
+#' (`obj$imputed_population_data`), original sample data (`obj$survey_data`),
+#' k (`obj$k`), stratifying indicator and variable
+#' (`obj$stratified`, `obj$strata`), if centering and scaling occurred
 #' (`obj$center_scale`), and the formula used for population imputation 
 #' (`obj$formula`). 
 #' @export
@@ -164,5 +165,14 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
   
   # eventually, we can return a list with parameter values, sample dataset etc. for more info,
   # currently just returning the imputed population
-  return(imputed_df)
+  outlst <- list(imputed_population_data = imputed_df,
+                 survey_data = survey_data,
+                 k = k,
+                 stratified = stratified,
+                 strata = strata,
+                 center_scale = center_scale,
+                 formula = formula
+                 )
+  class(outlst) <- "kbaabb"
+  return(outlst)
 }

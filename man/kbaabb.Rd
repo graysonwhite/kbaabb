@@ -46,9 +46,10 @@ are used in an unmodified form.}
 \item{...}{Currently ignored. For extendability.}
 }
 \value{
-A `kbaabb` object including the population data (`obj$pop`), original
-sample data (`obj$samp`), k (`obj$k`), stratifying indicator and variable
-(`obj$stratified`, `obj$strata`), if centering and scaling occured
+A `kbaabb` object including the population data
+(`obj$imputed_population_data`), original sample data (`obj$survey_data`),
+k (`obj$k`), stratifying indicator and variable
+(`obj$stratified`, `obj$strata`), if centering and scaling occurred
 (`obj$center_scale`), and the formula used for population imputation 
 (`obj$formula`).
 }
