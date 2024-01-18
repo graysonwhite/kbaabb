@@ -1,12 +1,43 @@
-# Adaptation of kbaabb_summer2023_jerzy to make the KBAABB
-# population generation process into one function
+#' @title kbaabb
+#'
+#' @description `kbaabb()` generates an imputed population dataset based on
+#' methodology introduced in Wieczorek et al. (2024+). 
+#'
+#' @param survey_data A dataframe containing the survey data to be used for the 
+#' imputation (i.e. "the sample"). This dataframe must contain all variables 
+#' listed in `formula` and `strata`.
+#' @param population_data A dataframe containing the population data for
+#' imputation to occur on (i.e. "the population"). This dataframe must contain 
+#' all auxiliary variables listed in `formula` and `strata`.
+#' @param formula The formula specified for imputation, taking the form 
+#' `y ~ x_1 + x_2 + ... + x_n` where {x_1, x_2, ..., x_n} is the set of 
+#' auxiliary variables used for imputation and y is the response. 
+#' @param k Integer. The number of neighbors used in the `k` nearest neighbors
+#' imputation
+#' @param strata Character. If `NULL` (default), imputation is performed without
+#' stratification. Otherwise, stratification occurs based on the variable
+#' specified in `strata`.
+#' @param center_scale Logical. If `TRUE` (default), auxiliary variables are
+#' centered and scaled (mean = 0, variance = 1) based on the population data. 
+#' Otherwise, the original sample and population dataframes supplied by the user
+#' are used in an unmodified form. 
+#' @param seed A seed to be set for reproducibility. 
+#' @param ... Currently ignored. For extendability.
+#'
+#' @return A `kbaabb` object including the population data (`obj$pop`), original
+#' sample data (`obj$samp`), k (`obj$k`), stratifying indicator and variable
+#' (`obj$stratified`, `obj$strata`), if centering and scaling occured
+#' (`obj$center_scale`), and the formula used for population imputation 
+#' (`obj$formula`). 
+#' @export
 kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
                    population_data, # dataframe (to be coerced into a matrix)
                    formula, # formula
                    k = 10, # positive integer
                    strata = NULL, # NULL or character 
                    center_scale = TRUE, # logical
-                   seed = NULL) { # numeric
+                   seed = NULL,
+                   ...) { # numeric
   # initial checks (TODO)
   ## make sure classes are correct
   ## make sure y_var, x_vars, and strata columns are numeric 
