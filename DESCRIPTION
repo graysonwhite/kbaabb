@@ -1,12 +1,20 @@
 Package: kbaabb
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Generates an Artificial Population Based on the KBAABB Methodology
 Version: 0.0.0.9000
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R:
+    c(person(given = "Grayson",
+             family = "White",
+             role = c("aut", "cre"),
+             email = "graysonwhite13@gmail.com",
+             comment = c(ORCID = "0000-0003-4993-2792")))
+Description: The `kbaabb` package provides tools for generating an artificial
+  population based on a kNN-based approximation to the approximate Bayesian 
+  bootstrap (KBAABB). This methodology is described in Wieczorek et al. (2023+).
 License: CC0
 Encoding: UTF-8
-LazyData: true
+Imports:
+  dplyr,
+  FNN,
+  magrittr
 RoxygenNote: 7.2.3
