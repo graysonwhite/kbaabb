@@ -31,7 +31,8 @@ auxiliary variables used for imputation and y is the response.}
 \item{k}{Integer. The number of neighbors used in the `k` nearest neighbors
 imputation}
 
-\item{strata}{Character. If `NULL` (default), imputation is performed without
+\item{strata}{Character. The name of a variable to be used for 
+stratification. If `NULL` (default), imputation is performed without
 stratification. Otherwise, stratification occurs based on the variable
 specified in `strata`.}
 
@@ -53,5 +54,5 @@ sample data (`obj$samp`), k (`obj$k`), stratifying indicator and variable
 }
 \description{
 `kbaabb()` generates an imputed population dataset based on
-methodology introduced in Wieczorek et al. (2024+).
+methodology introduced in Wieczorek et al. (2023+).
 }

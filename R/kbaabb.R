@@ -1,7 +1,7 @@
 #' @title kbaabb
 #'
 #' @description `kbaabb()` generates an imputed population dataset based on
-#' methodology introduced in Wieczorek et al. (2024+). 
+#' methodology introduced in Wieczorek et al. (2023+). 
 #'
 #' @param survey_data A dataframe containing the survey data to be used for the 
 #' imputation (i.e. "the sample"). This dataframe must contain all variables 
@@ -14,7 +14,8 @@
 #' auxiliary variables used for imputation and y is the response. 
 #' @param k Integer. The number of neighbors used in the `k` nearest neighbors
 #' imputation
-#' @param strata Character. If `NULL` (default), imputation is performed without
+#' @param strata Character. The name of a variable to be used for 
+#' stratification. If `NULL` (default), imputation is performed without
 #' stratification. Otherwise, stratification occurs based on the variable
 #' specified in `strata`.
 #' @param center_scale Logical. If `TRUE` (default), auxiliary variables are
@@ -70,12 +71,12 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     for (i in 1:length(strata_levels)) {
       # filter population for a particular strata
       strata_pos_pop <- which(colnames(population_data) == strata)
-      strata_pop <- population_data[,strata_pos_pop] %>% pull()
+      strata_pop <- population_data[,strata_pos_pop] %>% dplyr::pull()
       population_data.temp <- population_data[strata_pop == strata_levels[i],]
       
       # filter survey data for a particular strata
       strata_pos_surv <- which(colnames(survey_data) == strata)
-      strata_surv <- survey_data[,strata_pos_surv] %>% pull()
+      strata_surv <- survey_data[,strata_pos_surv] %>% dplyr::pull()
       # this step assumes that the survey data and population data have the same
       # strata levels, which might is true in general..., but very likely given
       # a decent sample size and reasonable number of levels in the strata. 
@@ -154,7 +155,7 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
       # rename(SUBSECTION_donor = SUBSECTION) %>%
       # select(SUBSECTION_donor, BA:CARBON) %>% 
       dplyr::select(y_var) %>%
-      slice(donating_rows[[i]])
+      dplyr::slice(donating_rows[[i]])
     imputed_df[[i]] <- cbind(population_data.list[[i]][1:nrecip[[i]], ], donating_df[[i]])
   }
   # turn from list into df
