@@ -3,3 +3,4 @@
 .gitignore
 sandbox
 ^README\.Rmd$
+^\.github$

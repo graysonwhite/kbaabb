@@ -8,6 +8,8 @@
 # kbaabb
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The `kbaabb` package provides tools for generating an artificial
