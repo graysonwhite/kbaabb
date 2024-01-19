@@ -57,3 +57,21 @@ k (`obj$k`), stratifying indicator and variable
 `kbaabb()` generates an imputed population dataset based on
 methodology introduced in Wieczorek et al. (2023+).
 }
+\examples{
+# KBAABB imputation for k = 5, stratifying by `tnt`:
+kbaabb(survey_data = SJC_sample,
+       population_data = SJC_population,
+       formula = biomass ~ tcc + elev,
+       k = 5,
+       strata = "tnt", 
+       center_scale = TRUE,
+       seed = 37)
+       
+# and without stratification
+kbaabb(survey_data = SJC_sample,
+       population_data = SJC_population,
+       formula = biomass ~ tcc + elev,
+       k = 5,
+       center_scale = TRUE,
+       seed = 37)
+}

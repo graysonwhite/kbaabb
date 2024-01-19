@@ -31,6 +31,23 @@
 #' (`obj$stratified`, `obj$strata`), if centering and scaling occurred
 #' (`obj$center_scale`), and the formula used for population imputation 
 #' (`obj$formula`). 
+#' @examples
+#' # KBAABB imputation for k = 5, stratifying by `tnt`:
+#' kbaabb(survey_data = SJC_sample,
+#'        population_data = SJC_population,
+#'        formula = biomass ~ tcc + elev,
+#'        k = 5,
+#'        strata = "tnt", 
+#'        center_scale = TRUE,
+#'        seed = 37)
+#'        
+#' # and without stratification
+#' kbaabb(survey_data = SJC_sample,
+#'        population_data = SJC_population,
+#'        formula = biomass ~ tcc + elev,
+#'        k = 5,
+#'        center_scale = TRUE,
+#'        seed = 37)
 #' @export
 kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
                    population_data, # dataframe (to be coerced into a matrix)
