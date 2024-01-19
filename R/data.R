@@ -10,8 +10,7 @@
 #'   \item{island}{Name of the island that the pixel occurs on.}
 #'   \item{tcc}{Auxiliary data. Tree canopy cover value at given pixel.}
 #'   \item{elev}{Auxiliary data. Elevation value at given pixel.}
-#'   \item{wc3cl}{Auxiliary data. Three-class world cover value at a given 
-#'   pixel.}
+#'   \item{tnt}{Auxiliary data. Tree (2) and non-tree (1) layer.}
 #'   \item{geometry}{`sf` geometry.}
 #' }
 "SJC_population"
@@ -30,12 +29,12 @@
 #'   \item{plt_cn}{Name of the island that the pixel occurs on.}
 #'   \item{biomass}{Average biomass measurement calculated from ground-collected
 #'   FIA data. Units: short tons/acre.}
-#'   \item{tcc}{Auxiliary data. Tree canopy cover value at given pixel.}
-#'   \item{elev}{Auxiliary data. Elevation value at given pixel.}
-#'   \item{wc3cl}{Auxiliary data. Three-class world cover value at a given 
-#'   pixel.}
+#'   \item{tcc}{Auxiliary data. Tree canopy cover value at given FIA plot.}
+#'   \item{elev}{Auxiliary data. Elevation value at given FIA plot}
+#'   \item{wc3cl}{Auxiliary data. Tree (2) and non-tree (1) value at a given 
+#'   FIA plot.}
 #'   \item{measurement_year}{Year in which the FIA plot was measured.}
-#'   \item{island}{Name of the island that the plot is on.}
+#'   \item{island}{Name of the island that the FIA plot is on.}
 #'   \item{geometry}{`sf` geometry.}
 #' }
 "SJC_sample"

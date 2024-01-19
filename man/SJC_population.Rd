@@ -11,8 +11,7 @@ A data frame and sf object with 55,570 rows and 5 columns:
   \item{island}{Name of the island that the pixel occurs on.}
   \item{tcc}{Auxiliary data. Tree canopy cover value at given pixel.}
   \item{elev}{Auxiliary data. Elevation value at given pixel.}
-  \item{wc3cl}{Auxiliary data. Three-class world cover value at a given 
-  pixel.}
+  \item{tnt}{Auxiliary data. Tree (2) and non-tree (1) layer.}
   \item{geometry}{`sf` geometry.}
 }
 }
