@@ -50,6 +50,10 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     set.seed(seed)
   }
   
+  # make sure only class is data.frame (not a tibble or sf etc)
+  survey_data <- as.data.frame(survey_data)
+  population_data <- as.data.frame(population_data)
+  
   # set up data
   y_var <- all.vars(formula[-3])
   x_vars <- all.vars(formula[-2])
@@ -72,12 +76,12 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     for (i in 1:length(strata_levels)) {
       # filter population for a particular strata
       strata_pos_pop <- which(colnames(population_data) == strata)
-      strata_pop <- population_data[,strata_pos_pop] %>% dplyr::pull()
+      strata_pop <- population_data[,strata_pos_pop]
       population_data.temp <- population_data[strata_pop == strata_levels[i],]
       
       # filter survey data for a particular strata
       strata_pos_surv <- which(colnames(survey_data) == strata)
-      strata_surv <- survey_data[,strata_pos_surv] %>% dplyr::pull()
+      strata_surv <- survey_data[,strata_pos_surv]
       # this step assumes that the survey data and population data have the same
       # strata levels, which might is true in general..., but very likely given
       # a decent sample size and reasonable number of levels in the strata. 
@@ -95,7 +99,7 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     population_data <- population_data %>%
       dplyr::mutate(strata_indicator = 1)
     
-    sample_data <- sample_data %>%
+    survey_data <- survey_data %>%
       dplyr::mutate(strata_indicator = 1)
     
     strata_levels <- 1
