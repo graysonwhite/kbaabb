@@ -3,4 +3,6 @@
 .RData
 .Ruserdata
 *.Rproj
-sandbox
+sandbox/M221
+sandbox/kbaabb_based_on.Rmd
+sandbox/test_func.R
