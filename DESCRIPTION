@@ -7,7 +7,16 @@ Authors@R:
              family = "White",
              role = c("aut", "cre"),
              email = "graysonwhite13@gmail.com",
-             comment = c(ORCID = "0000-0003-4993-2792")))
+             comment = c(ORCID = "0000-0003-4993-2792")),
+      person(given = "Jerzy",
+             family = "Wieczorek",
+             role = "aut"),
+      person(given = "Kelly",
+             family = "McConville",
+             role = "aut"),
+      person(given = "Tracey",
+             family = "Frescino",
+             role = "aut"))
 Description: The `kbaabb` package provides tools for generating an artificial
   population based on a kNN-based approximation to the approximate Bayesian 
   bootstrap (KBAABB). This methodology is described in Wieczorek et al. (2023+).
