@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 `kbaabb` is still under development. Please use at your own risk!
 
-# kbaabb
+# kbaabb <img src="https://raw.githubusercontent.com/graysonwhite/kbaabb/main/figs/kbaabb.png" align="right" width=125 />
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml)

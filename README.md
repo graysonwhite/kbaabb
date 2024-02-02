@@ -5,7 +5,7 @@
 
 `kbaabb` is still under development. Please use at your own risk!
 
-# kbaabb
+# kbaabb <img src="https://raw.githubusercontent.com/graysonwhite/kbaabb/main/figs/kbaabb.png" align="right" width=125 />
 
 <!-- badges: start -->
 
@@ -14,8 +14,8 @@
 
 The `kbaabb` package provides tools for generating an artificial
 population based on a kNN-based approximation to the approximate
-Bayesian bootstrap (KBAABB). This methodology is described in [Wieczorek
-et al. (2024+)](https://arxiv.org/abs/2306.15607).
+Bayesian bootstrap (KBAABB). This methodology is described in Wieczorek
+et al. (2023+).
 
 ## Installation
 
