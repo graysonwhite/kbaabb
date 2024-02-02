@@ -9,7 +9,7 @@
 
 `kbaabb` is still under development. Please use at your own risk!
 
-# kbaabb <img src="https://raw.githubusercontent.com/graysonwhite/kbaabb/main/figs/kbaabb.png" align="right" width=125 />
+# kbaabb <a><img src='figs/kbaabb.png' align="right" height="280" /></a>
 
 ## Overview
 
