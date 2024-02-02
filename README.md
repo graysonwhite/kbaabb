@@ -1,5 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 # Development mode
 
@@ -7,10 +11,7 @@
 
 # kbaabb <img src="https://raw.githubusercontent.com/graysonwhite/kbaabb/main/figs/kbaabb.png" align="right" width=125 />
 
-<!-- badges: start -->
-
-[![R-CMD-check](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
+## Overview
 
 The `kbaabb` package provides tools for generating an artificial
 population based on a kNN-based approximation to the approximate

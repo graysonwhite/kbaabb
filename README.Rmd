@@ -13,15 +13,17 @@ knitr::opts_chunk$set(
 )
 ```
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 # Development mode
 
 `kbaabb` is still under development. Please use at your own risk!
 
 # kbaabb <img src="https://raw.githubusercontent.com/graysonwhite/kbaabb/main/figs/kbaabb.png" align="right" width=125 />
 
-<!-- badges: start -->
-[![R-CMD-check](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/graysonwhite/kbaabb/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
+## Overview
 
 The `kbaabb` package provides tools for generating an artificial population
 based on a kNN-based approximation to the approximate Bayesian bootstrap
