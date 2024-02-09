@@ -11,11 +11,11 @@ Authors@R:
       person(given = "Jerzy",
              family = "Wieczorek",
              role = "aut"),
-      person(given = "Kelly",
-             family = "McConville",
-             role = "aut"),
       person(given = "Tracey",
              family = "Frescino",
+             role = "aut"),
+      person(given = "Kelly",
+             family = "McConville",
              role = "aut"))
 Description: The `kbaabb` package provides tools for generating an artificial
   population based on a kNN-based approximation to the approximate Bayesian 
