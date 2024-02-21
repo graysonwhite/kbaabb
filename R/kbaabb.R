@@ -55,8 +55,8 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
                    k = 10, # positive integer
                    strata = NULL, # NULL or character 
                    center_scale = TRUE, # logical
-                   seed = NULL,
-                   ...) { # numeric
+                   seed = NULL,  # numeric
+                   ...) {
   # initial checks (TODO)
   ## make sure classes are correct
   ## make sure y_var, x_vars, and strata columns are numeric 
@@ -193,7 +193,8 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
                  strata = strata,
                  center_scale = center_scale,
                  formula = formula,
-                 donating_rows = donating_rows
+                 donating_rows = donating_rows,
+                 which_knn = which_knn
                  )
   class(outlst) <- "kbaabb"
   return(outlst)
