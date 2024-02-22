@@ -192,9 +192,7 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
                  stratified = stratified,
                  strata = strata,
                  center_scale = center_scale,
-                 formula = formula,
-                 donating_rows = donating_rows,
-                 which_knn = which_knn
+                 formula = formula
                  )
   class(outlst) <- "kbaabb"
   return(outlst)
