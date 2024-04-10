@@ -152,12 +152,10 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
   KBAABB_probs[k] <- 1 - sum(KBAABB_probs[1:(k-1)])
   
   ## next, find donors, choose NNs, and impute
-  nns_subset <- list()
-  nrecip <- list()
-  which_knn <- list()
-  donating_rows <- list()
-  donating_df <- list()
-  imputed_df <- list()
+  out_len <- length(strata_levels)
+  nns_subset <- nrecip <- which_knn <- donating_rows <- donating_df <- imputed_df <-
+    vector(mode = "list", length = out_len)
+  
   for (i in 1:length(strata_levels)) {
     # find donors
     nns_subset[[i]] <- FNN::get.knnx(survey_data.justx.list[[i]],
