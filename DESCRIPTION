@@ -3,18 +3,18 @@ Type: Package
 Title: Generates an Artificial Population Based on the KBAABB Methodology
 Version: 0.0.0.9000
 Authors@R:
-    c(person(given = "Grayson",
+    c(person(given = "Grayson W.",
              family = "White",
              role = c("aut", "cre"),
              email = "graysonwhite13@gmail.com",
              comment = c(ORCID = "0000-0003-4993-2792")),
-      person(given = "Jerzy",
+      person(given = "Jerzy A.",
              family = "Wieczorek",
              role = "aut"),
-      person(given = "Tracey",
+      person(given = "Tracey S.",
              family = "Frescino",
              role = "aut"),
-      person(given = "Kelly",
+      person(given = "Kelly S.",
              family = "McConville",
              role = "aut"))
 Description: The `kbaabb` package provides tools for generating an artificial
