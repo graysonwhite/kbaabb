@@ -18,6 +18,9 @@
 #' stratification. If `NULL` (default), imputation is performed without
 #' stratification. Otherwise, stratification occurs based on the variable
 #' specified in `strata`.
+#' @param unique_id Character. the name of a variable in `population_data` to
+#' be used as a unique identifier in the `inputed_population_data` from the
+#' functions output. If NULL, no `unique_id` is used.
 #' @param center_scale Logical. If `TRUE` (default), auxiliary variables are
 #' centered and scaled (mean = 0, variance = 1) based on the population data. 
 #' Otherwise, the original sample and population dataframes supplied by the user
@@ -54,6 +57,7 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
                    formula, # formula
                    k = 10, # positive integer
                    strata = NULL, # NULL or character 
+                   unique_id = NULL, # for tracking the population data
                    center_scale = TRUE, # logical
                    seed = NULL,  # numeric
                    ...) {
@@ -71,6 +75,11 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
   survey_data <- as.data.frame(survey_data)
   population_data <- as.data.frame(population_data)
   
+  # keep unique ID in population data rownames
+  if (!is.null(unique_id)) {
+    rownames(population_data) <- population_data[[unique_id]]
+  }
+
   # set up data
   y_var <- all.vars(formula[-3])
   x_vars <- all.vars(formula[-2])

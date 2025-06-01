@@ -10,6 +10,7 @@ kbaabb(
   formula,
   k = 10,
   strata = NULL,
+  unique_id = NULL,
   center_scale = TRUE,
   seed = NULL,
   ...
@@ -35,6 +36,10 @@ imputation}
 stratification. If `NULL` (default), imputation is performed without
 stratification. Otherwise, stratification occurs based on the variable
 specified in `strata`.}
+
+\item{unique_id}{Character. the name of a variable in `population_data` to
+be used as a unique identifier in the `inputed_population_data` from the
+functions output. If NULL, no `unique_id` is used.}
 
 \item{center_scale}{Logical. If `TRUE` (default), auxiliary variables are
 centered and scaled (mean = 0, variance = 1) based on the population data. 
