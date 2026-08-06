@@ -23,10 +23,8 @@ Description: The `kbaabb` package provides tools for generating an artificial
 License: CC0
 Encoding: UTF-8
 Imports:
-  dplyr,
-  FNN,
-  magrittr
-RoxygenNote: 7.3.2
+  FNN
 Depends: 
     R (>= 2.10)
 LazyData: true
+Config/roxygen2/version: 8.0.0
