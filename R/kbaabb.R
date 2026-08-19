@@ -70,16 +70,16 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     strata,
     center_scale
   )
-  
-  # set seed if specified 
+
+  # set seed if specified
   if (!is.null(seed)) {
     set.seed(seed)
   }
-  
+
   # make sure only (object) class present is a data.frame (not a tibble or sf etc)
   survey_data <- as.data.frame(survey_data)
   population_data <- as.data.frame(population_data)
-  
+
   # set up data
   y_var <- all.vars(formula[-3])
   x_vars <- all.vars(formula[-2])
@@ -93,7 +93,7 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
   # and we should trim NAs first
   
   if (any(is.na(population_data[,X_vars]))) {
-    warning("NAs present in population data. Removing these rows.")
+    message("NAs present in population data. Removing these rows.")
     valid_indices = rownames(population_data)
     for (i in 1:length(X_vars)) {
       valid_indices = intersect(valid_indices, 
@@ -103,7 +103,7 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
   }
   
   if (any(is.na(survey_data))) {
-    warning("NAs present in survey data. Removing these rows.")
+    message("NAs present in survey data. Removing these rows.")
     valid_indices = rownames(survey_data)
     for (i in 1:length(all_vars)) {
       valid_indices = intersect(valid_indices, 
@@ -119,9 +119,6 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
   if (!is.null(strata)) {
     # get levels of strata
     strata_levels <- unique(survey_data[[strata]])
-    if (length(strata_levels) == 1) {
-      warning(paste0("Detected only one level of the supplied strata."))
-    }
     # loop through levels to create stratified datasets
     population_data.list <- list()
     survey_data.list <- list()
@@ -133,26 +130,25 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     # strata_levels are unique(strata_surv)
     if ((length(setdiff(strata_levels, unique(strata_pop))) != 0) ||
         (length(setdiff(unique(strata_pop), strata_levels)) != 0)) {
-      warning(paste("Nonequal strata between survey data and population data.",
-                    "Subseting population data to only use strata in survey",
-                    "data."))
+      warning("Nonequal strata between survey data and population data. ",
+              "Subseting population data to only use common strata.")
       # subset strata levels as described above
-      strata_levels <- strata_levels[strata_levels %in% unique(strata_surv)]
+      strata_levels <- intersect(strata_levels, unique(strata_pop))
       subset_idx <- population_data[[strata]] %in% strata_levels
       population_data <- population_data[subset_idx,]
       population_data_og <- population_data_og[subset_idx,]
+      survey_data <- survey_data[survey_data[[strata]] %in% strata_levels,]
+      
+      strata_pop <- population_data[[strata]]
+      strata_surv <- survey_data[[strata]]
     }
 
     for (i in 1:length(strata_levels)) {
       # filter population for a particular strata
-      population_data.temp <- population_data[population_data[[strata]] == strata_levels[i],]
+      population_data.list[[i]] <- population_data[population_data[[strata]] == strata_levels[i],]
       
       # filter survey data for a particular strata
-      survey_data.temp <- survey_data[strata_surv == strata_levels[i],]
-      
-      population_data.list[[i]] <- population_data.temp
-      survey_data.list[[i]] <- survey_data.temp 
-      rm(population_data.temp, survey_data.temp)
+      survey_data.list[[i]] <- survey_data[strata_surv == strata_levels[i],]
     }
     stratified <- TRUE
   } else {
@@ -170,15 +166,15 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     survey_data.list <- list(survey_data)
   }
   
-  # center and scale all X's if specified (the default)
-  if (center_scale) {
-    population_data.justx.list <- list()
-    survey_data.justx.list <- list()
-    for (i in 1:length(strata_levels)) {
-      # select just the X's to center and scale
-      population_data.justx.list[[i]] <- population_data.list[[i]][ , x_vars] 
-      survey_data.justx.list[[i]] <- survey_data.list[[i]][ , x_vars]
-      
+  # get just the covariates specified
+  population_data.justx.list <- list()
+  survey_data.justx.list <- list()
+  for (i in 1:length(strata_levels)) {
+    # select just the X's to center and scale
+    population_data.justx.list[[i]] <- population_data.list[[i]][ , x_vars] 
+    survey_data.justx.list[[i]] <- survey_data.list[[i]][ , x_vars]
+    # center and scale all X's if specified (the default)
+    if (center_scale) {
       # then center and scale
       population_data.justx.list[[i]] <- scale(population_data.justx.list[[i]])
       survey_data.justx.list[[i]] <- scale(survey_data.justx.list[[i]],
@@ -215,9 +211,9 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
 
     # ensure FNN::get.knnx() will work
     if (nrow(survey_data.justx.list[[i]]) < k) {
-      warning(paste0("strata level ", i, " has ", 
-                     nrow(survey_data.justx.list[[i]]), " observations. This is",
-                     " less than k. k is temporarily reduced to this number."))
+      warning("strata level ", i, " has ", 
+              nrow(survey_data.justx.list[[i]]), " observations. This is",
+              " less than k. k is temporarily reduced to this number.")
       replace_k = TRUE
       old_k = k
       old_probs = KBAABB_probs
@@ -226,9 +222,11 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     }
     
     # find donors
-    nns_subset[[i]] <- FNN::get.knnx(survey_data.justx.list[[i]],
-				     population_data.justx.list[[i]],
-				     k = k)
+    nns_subset[[i]] <- FNN::get.knnx(
+      survey_data.justx.list[[i]],
+      population_data.justx.list[[i]],
+      k = k
+    )
     # choose NNs
     nrecip[[i]] <- nrow(population_data.justx.list[[i]])
     # get which KNN index to impute each unit in receiving dataset with
