@@ -10,8 +10,9 @@
 #' imputation to occur on (i.e. "the population"). This dataframe must contain 
 #' all auxiliary variables listed in \code{formula} and \code{strata}.
 #' @param formula The formula specified for imputation, taking the form 
-#' \code{y ~ x_1 + x_2 + ... + x_n} where \{x_1, x_2, ..., x_n\} is the set of 
-#' auxiliary variables used for imputation and y is the response. 
+#' \code{y1 + y2 + \dots + yn ~ x1 + x2 + \dots + xm} where
+#' \{x1, x2, \dots, xm\} is the set of auxiliary variables used for imputation
+#' and \{y1, y2, \dots, yn\} are the responses.
 #' @param k Integer. The number of neighbors used in the \code{k} nearest neighbors
 #' imputation
 #' @param strata Character. The name of a variable to be used for 
@@ -19,10 +20,15 @@
 #' stratification. Otherwise, stratification occurs based on the variable
 #' specified in \code{strata}. It is advised to provide strata.
 #' @param center_scale Logical. If \code{TRUE} (default), auxiliary variables are
-#' centered and scaled (mean = 0, variance = 1) based on the population data. 
+#' centered and scaled (mean = 0, variance = 1) based on the population data.
 #' Otherwise, the original sample and population dataframes supplied by the user
 #' are used in an unmodified form. 
 #' @param seed A seed to be set for reproducibility. 
+#' @param keep_survey_id Logical, should the rownames of the survey data which
+#' correspond to the imputed values be kept? Allows for a lookup of which rows
+#' were used for which imputed observations.
+#' @param id_name The name for the column containing the rownames in 
+#' \code{keep_survey_id}.
 #' @param ... Currently ignored. For extendability.
 #'
 #' @return A \code{kbaabb} object including:
@@ -35,24 +41,35 @@
 #'  \item \code{center_scale}: If centering and scaling occured
 #'  \item \code{formula}: The formula used for population imputation
 #' }
-#' 
 #' @examples
 #' # KBAABB imputation for k = 5, stratifying by `tnt`:
-#' kbaabb(survey_data = SJC_sample,
+#' pop = kbaabb(survey_data = SJC_sample,
 #'        population_data = SJC_population,
 #'        formula = biomass ~ tcc + elev,
 #'        k = 5,
-#'        strata = "tnt", 
+#'        strata = "tnt",
 #'        center_scale = TRUE,
 #'        seed = 37)
-#'        
+#' head(pop$imputed_population_data)
+#'
 #' # and without stratification
-#' kbaabb(survey_data = SJC_sample,
+#' pop = kbaabb(survey_data = SJC_sample,
 #'        population_data = SJC_population,
 #'        formula = biomass ~ tcc + elev,
 #'        k = 5,
-#'        center_scale = TRUE,
 #'        seed = 37)
+#' head(pop$imputed_population_data)
+#'
+#' # or with multiple imputations
+#' pop = kbaabb(survey_data = SJC_sample,
+#'        population_data = SJC_population,
+#'        formula = biomass + measurement_year ~ tcc + elev,
+#'        k = 5,
+#'        strata = "tnt",
+#'        seed = 37)
+#' head(pop$imputed_population_data)
+#'
+#'
 #' @export
 kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
                    population_data, # dataframe (to be coerced into a matrix)
@@ -61,6 +78,8 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
                    strata = NULL, # NULL or character 
                    center_scale = TRUE, # logical
                    seed = NULL,  # numeric
+                   keep_survey_id = TRUE,
+                   id_name = "survey_row_id",
                    ...) {
   validate_parameters(
     survey_data,
@@ -68,7 +87,9 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     formula,
     k,
     strata,
-    center_scale
+    center_scale,
+    keep_survey_id,
+    id_name
   )
 
   # set seed if specified
@@ -81,12 +102,12 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
   population_data <- as.data.frame(population_data)
 
   # set up data
-  y_var <- all.vars(formula[-3])
-  x_vars <- all.vars(formula[-2])
-  all_vars <- c(y_var, x_vars, strata)
+  y_vars <- all.vars(formula[[2]])
+  x_vars <- all.vars(formula[[3]])
+  all_vars <- c(y_vars, x_vars, strata)
   X_vars <- c(x_vars, strata)
   
-  validate_variables(x_vars, y_var, survey_data, population_data)
+  validate_variables(x_vars, y_vars, survey_data, population_data, keep_survey_id, id_name)
   
   survey_data <- survey_data[,all_vars]
   # will trim population data shortly, want to retain part, though,
@@ -209,7 +230,6 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     # of k so we can replace it, and this is a logical flag noting if
     # we've done that.
 
-    # ensure FNN::get.knnx() will work
     if (nrow(survey_data.justx.list[[i]]) < k) {
       warning("strata level ", i, " has ", 
               nrow(survey_data.justx.list[[i]]), " observations. This is",
@@ -240,9 +260,13 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
     donating_rows[[i]] <- nns_subset[[i]]$nn.index[cbind(1:nrecip[[i]], which_knn[[i]])]
     # aggregate the imputed response variables into one data.frame
     
-    donating_df[[i]] <- as.data.frame(survey_data.list[[i]][donating_rows[[i]],y_var])
-    colnames(donating_df[[i]]) <- y_var
+    donating_df[[i]] <- as.data.frame(survey_data.list[[i]][donating_rows[[i]],y_vars])
+    if (keep_survey_id) {
+      donating_df[[i]][[id_name]] <- donating_rows[[i]]
+    }
+    colnames(donating_df[[i]])[1:length(y_vars)] <- y_vars
     
+
     # add the imputed values to the observed data in the recieving data
     imputed_df[[i]] <- cbind(population_data.list[[i]][1:nrecip[[i]], ],
                              donating_df[[i]])
@@ -251,6 +275,7 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
       KBAABB_probs = old_probs
     }
   }
+
   # turn from list into df
   imputed_df <- do.call(rbind, imputed_df)
   
@@ -258,9 +283,16 @@ kbaabb <- function(survey_data, # dataframe (to be coerced into a matrix)
   # return the data-frame provided similarly to the form it was provided in
   # that is, we will add the original columns back in.
   # Well actually, we add the imputed data back to the original, but same thing
-  rows = rownames(imputed_df) # first get the columns that we imputed (i.e., not NA)
-  imputed_pop = population_data_og[rows,] # and subset the original provided data 
-  imputed_pop[[y_var]] = imputed_df[[y_var]] # the last thing we need to do is add the y_var
+  rows <- rownames(imputed_df) # first get the columns that we imputed (i.e., not NA)
+  imputed_pop <- population_data_og[rows,] # and subset the original provided data 
+  for (var in y_vars) {
+    imputed_pop[[var]] = NA
+  }
+  # the last thing we need to do is add the y_vars and survey id if we want it
+  imputed_pop[,y_vars] <- imputed_df[,y_vars]
+  if (keep_survey_id) {
+    imputed_pop[[id_name]] <- imputed_df[[id_name]]
+  }
   
   
   # eventually, we can return a list with parameter values, sample dataset etc. for more info,
@@ -287,7 +319,9 @@ validate_parameters <- function(survey_data,
                                 formula,
                                 k,
                                 strata,
-                                center_scale) {
+                                center_scale,
+                                keep_survey_id,
+                                id_name) {
   if (!is.numeric(k)) {
     stop(paste0("Must provide a numeric value for k."))
   }
@@ -326,36 +360,56 @@ validate_parameters <- function(survey_data,
              })
   }
   
+  if (!is.character(id_name)) {
+    stop("id_name must be a character")
+  }
 }
 
 #' Validate covariates/response
 #' @noRd
 validate_variables = function(
     x_vars,
-    y_var,
+    y_vars,
     survey_data,
-    population_data
+    population_data,
+    keep_survey_id,
+    id_name
 ) {
   if (length(x_vars) == 0) {
     stop(paste("Supplied no auxiliaries variables. Please supply auxiliary",
                "variables."))
   }
-  if (length(y_var) == 0) {
+  if (length(y_vars) == 0) {
     stop(paste("Supplied no response variables. Cannot impute data without",
                "a response variable."))
   } 
-  
-  if (!(y_var %in% colnames(survey_data))) {
-    stop("Response variable not in survey data.")
+
+  temp_setdiff_varnames = setdiff(y_vars, colnames(survey_data))
+  if (length(setdiff(y_vars, colnames(survey_data))) != 0) {
+    stop("Response variable(s) not in survey data.")
   }
   
-  temp_setdiff_varnames = setdiff(x_vars, colnames(survey_data))
-  if (length(temp_setdiff_varnames) > 0) {
-    stop(paste("Variable", temp_setdiff_varnames, "is not in survey data."))
+  for (vars in list(
+    x_vars,
+    y_vars
+  )) {
+    temp_setdiff_varnames = setdiff(vars, colnames(survey_data))
+    if (length(temp_setdiff_varnames) > 0) {
+      stop(paste("Variable", temp_setdiff_varnames, "is not in survey data."))
+    }
   }
   
-  temp_setdiff_varnames = setdiff(x_vars, colnames(population_data))
-  if (length(setdiff(x_vars, colnames(population_data))) > 0) {
-    stop(paste("Variable", temp_setdiff_varnames, "is not in survey data."))
+  temp_intersect_varnames = intersect(y_vars, colnames(population_data))
+  if (length(temp_intersect_varnames) != 0) {
+    warning("Variable", ifelse(length(y_vars) > 1, "s", ""), " ",
+            temp_intersect_varnames,
+            ifelse(length(y_vars) > 1, " are", " is"),
+            " already present in the population data. Imputing ",
+            ifelse(length(y_vars) > 1, "them", "it"), " anyway.")
+  }
+  
+  if (keep_survey_id && (id_name %in% union(x_vars, y_vars))) {
+    stop("id_name must be unique, but you already have a column named ",
+         id_name, ". Please rename id_name, or rename this column.")
   }
 }

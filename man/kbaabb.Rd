@@ -12,6 +12,8 @@ kbaabb(
   strata = NULL,
   center_scale = TRUE,
   seed = NULL,
+  keep_survey_id = TRUE,
+  id_name = "survey_row_id",
   ...
 )
 }
@@ -25,8 +27,9 @@ imputation to occur on (i.e. "the population"). This dataframe must contain
 all auxiliary variables listed in \code{formula} and \code{strata}.}
 
 \item{formula}{The formula specified for imputation, taking the form 
-\code{y ~ x_1 + x_2 + ... + x_n} where \{x_1, x_2, ..., x_n\} is the set of 
-auxiliary variables used for imputation and y is the response.}
+\code{y1 + y2 + \dots + yn ~ x1 + x2 + \dots + xm} where
+\{x1, x2, \dots, xm\} is the set of auxiliary variables used for imputation
+and \{y1, y2, \dots, yn\} are the responses.}
 
 \item{k}{Integer. The number of neighbors used in the \code{k} nearest neighbors
 imputation}
@@ -37,11 +40,18 @@ stratification. Otherwise, stratification occurs based on the variable
 specified in \code{strata}. It is advised to provide strata.}
 
 \item{center_scale}{Logical. If \code{TRUE} (default), auxiliary variables are
-centered and scaled (mean = 0, variance = 1) based on the population data. 
+centered and scaled (mean = 0, variance = 1) based on the population data.
 Otherwise, the original sample and population dataframes supplied by the user
 are used in an unmodified form.}
 
 \item{seed}{A seed to be set for reproducibility.}
+
+\item{keep_survey_id}{Logical, should the rownames of the survey data which
+correspond to the imputed values be kept? Allows for a lookup of which rows
+were used for which imputed observations.}
+
+\item{id_name}{The name for the column containing the rownames in 
+\code{keep_survey_id}.}
 
 \item{...}{Currently ignored. For extendability.}
 }
@@ -63,19 +73,31 @@ methodology introduced in White et al. (2025).
 }
 \examples{
 # KBAABB imputation for k = 5, stratifying by `tnt`:
-kbaabb(survey_data = SJC_sample,
+pop = kbaabb(survey_data = SJC_sample,
        population_data = SJC_population,
        formula = biomass ~ tcc + elev,
        k = 5,
-       strata = "tnt", 
+       strata = "tnt",
        center_scale = TRUE,
        seed = 37)
-       
+head(pop$imputed_population_data)
+
 # and without stratification
-kbaabb(survey_data = SJC_sample,
+pop = kbaabb(survey_data = SJC_sample,
        population_data = SJC_population,
        formula = biomass ~ tcc + elev,
        k = 5,
-       center_scale = TRUE,
        seed = 37)
+head(pop$imputed_population_data)
+
+# or with multiple imputations
+pop = kbaabb(survey_data = SJC_sample,
+       population_data = SJC_population,
+       formula = biomass + measurement_year ~ tcc + elev,
+       k = 5,
+       strata = "tnt",
+       seed = 37)
+head(pop$imputed_population_data)
+
+
 }
