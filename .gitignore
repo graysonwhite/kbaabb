@@ -6,3 +6,6 @@
 sandbox/M221
 sandbox/kbaabb_based_on.Rmd
 sandbox/test_func.R
+*.Rcheck/
+kbaabb_*.tar.gz
+cran-comments.md

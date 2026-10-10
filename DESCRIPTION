@@ -1,7 +1,7 @@
 Package: kbaabb
 Type: Package
 Title: Generates an Artificial Population Based on the KBAABB Methodology
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R:
     c(person(given = "Grayson W.",
              family = "White",

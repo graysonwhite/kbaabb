@@ -5,3 +5,4 @@ sandbox
 ^README\.Rmd$
 ^\.github$
 figs
+^CRAN-SUBMISSION$
