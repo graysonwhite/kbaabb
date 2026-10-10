@@ -6,3 +6,4 @@ sandbox
 ^\.github$
 figs
 ^CRAN-SUBMISSION$
+cran-comments.md

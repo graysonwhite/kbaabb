@@ -9,3 +9,4 @@ sandbox/test_func.R
 *.Rcheck/
 kbaabb_*.tar.gz
 cran-comments.md
+CRAN-SUBMISSION
