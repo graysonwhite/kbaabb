@@ -23,9 +23,9 @@ Authors@R:
       person(given = "Kelly S.",
              family = "McConville",
              role = "aut"))
-Description: The `kbaabb` package provides tools for generating an artificial
+Description: Provides tools for generating an artificial
   population based on a kNN-based approximation to the approximate Bayesian 
-  bootstrap (KBAABB). This methodology is described in White et al. (2025).
+  bootstrap (KBAABB). This methodology is described in White et al. (2025) <doi:10.1093/forestry/cpaf071>.
 License: CC0
 Encoding: UTF-8
 Imports:
